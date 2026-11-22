@@ -800,10 +800,13 @@ function setupEventListeners() {
   document.getElementById('tab-signup').addEventListener('click', () => switchAuthTab('signup'));
 
   // Sign Up Submission
-  document.getElementById('signup-form').addEventListener('submit', async (e) => {
+  
+document.getElementById('signup-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const email = document.getElementById('reg-email').value.trim();
     const password = document.getElementById('reg-password').value;
+
     const metadata = {
       first_name: document.getElementById('reg-first-name').value.trim(),
       middle_initial: document.getElementById('reg-middle-initial').value.trim(),
@@ -813,12 +816,22 @@ function setupEventListeners() {
       username: document.getElementById('reg-username').value.trim()
     };
 
-    const { error } = await supabaseClient.auth.signUp({ email, password, options: { data: metadata } });
+    const { error } = await supabaseClient.auth.signUp({
+   
+      email,
+      password,
+      options: {
+        emailRedirectTo: 'https://maranganhslrclub.github.io/Learning-Resources-Hub/LR_Library.html',
+        data: metadata
+      }
+    });
+
     if (error) return showToast(error.message, 'error');
 
     closeModal('auth-modal');
-    showToast('Account created! Check your email if verification is enabled, or sign in.');
-  });
+    showToast('Account created! Check your email for verification.');
+});
+   
 
   // Sign In Submission (Username -> Email lookup via RPC)
   document.getElementById('signin-form').addEventListener('submit', async (e) => {
