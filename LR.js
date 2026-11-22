@@ -11,6 +11,16 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
 
 supabaseClient.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN' && session) {
+        console.log('User successfully signed in!');
+
+        closeModal('auth-modal');
+
+        // Update your website's logged-in interface
+        loadUserProfile();
+    }
+});
+supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
         const url = new URL(window.location.href);
         const isEmailConfirmation =
             url.searchParams.get('type') === 'signup' ||
