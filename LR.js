@@ -9,6 +9,29 @@ const SUPABASE_ANON_KEY = 'sb_publishable_s4q6yVDuJtl_mZJsryDYQw_yXOMErkw';
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+        const url = new URL(window.location.href);
+        const isEmailConfirmation =
+            url.searchParams.get('type') === 'signup' ||
+            url.hash.includes('type=signup');
+
+        if (isEmailConfirmation) {
+            showToast(
+                'Email successfully verified! Your account is ready. You can now sign in.',
+                'success'
+            );
+
+            // Remove confirmation parameters from the address bar
+            window.history.replaceState(
+                {},
+                document.title,
+                window.location.pathname
+            );
+        }
+    }
+});
+
 // Default Placeholder Cover SVG Data URI
 const DEFAULT_BOOK_COVER =
   'data:image/svg+xml;utf8,' +
